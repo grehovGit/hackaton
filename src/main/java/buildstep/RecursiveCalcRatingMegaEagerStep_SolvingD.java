@@ -1,29 +1,21 @@
 package buildstep;
 
-import builder.MemoryWarningSystem;
-import builder.PizzaBuilder;
-import model.Pizza;
-import model.Slice;
-
-import java.util.Map;
-import java.util.TreeSet;
-
-public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
+/*public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
     static {
         MemoryWarningSystem.setPercentageUsageThreshold(0.9); ;
     }
 
     MemoryWarningSystem mws = new MemoryWarningSystem();
 
-    PizzaBuilder pizzaBuilder;
+    slideBuilder pizzaBuilder;
     private Pizza pizza;
     private Map<String, Integer> calculatedStates;
-    private TreeSet<Slice> placedSlices = new TreeSet<>();
+    private TreeSet<Photo> placedSlices = new TreeSet<>();
     private int startSliceNumber = 3;
 
-    public RecursiveCalcRatingMegaEagerStep_SolvingD(PizzaBuilder pizzaBuilder) {
+    public RecursiveCalcRatingMegaEagerStep_SolvingD(slideBuilder pizzaBuilder) {
         this.pizza = pizzaBuilder.getPizza();
-        this.calculatedStates = PizzaBuilder.calculatedStates;
+        this.calculatedStates = slideBuilder.calculatedStates;
         this.pizzaBuilder = pizzaBuilder;
 
         mws.addListener(new MemoryWarningSystem.Listener() {
@@ -39,8 +31,8 @@ public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
         rate(this.placedSlices, 0);
     }
 
-    private void rate(TreeSet<Slice> slices, int currentRate) {
-        Slice slice = new Slice(1, 1, 0, 0, startSliceNumber++);
+    private void rate(TreeSet<Photo> slices, int currentRate) {
+        Photo slice = new Photo(1, 1, 0, 0, startSliceNumber++);
         slices.add(slice);
 
         if (startSliceNumber == 13) {
@@ -79,25 +71,25 @@ public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
         slices.remove(slice);
     }
 
-    private boolean inPizza(Slice slice){
+    private boolean inPizza(Photo slice){
         return slice.getXTopLeft() + slice.getWidth() <= this.pizza.getWidth() &&
             slice.getYTopLeft() + slice.getHeight() <= this.pizza.getHeight();
     }
 
-    private boolean isInEndOfRow(Slice slice){
+    private boolean isInEndOfRow(Photo slice){
         return slice.getXTopLeft() + slice.getWidth() == this.pizza.getWidth();
     }
 
-    private void moveToNextRow(Slice slice) {
+    private void moveToNextRow(Photo slice) {
         slice.setXTopLeft(0);
         slice.setYTopLeft(slice.getYTopLeft() + 1);
     }
 
-    private void moveNext(Slice slice) {
+    private void moveNext(Photo slice) {
         slice.setXTopLeft(slice.getXTopLeft() + 1);
     }
 
-    private void moveSlice(Slice slice) {
+    private void moveSlice(Photo slice) {
         if (isInEndOfRow(slice)) {
             moveToNextRow(slice);
         } else {
@@ -105,10 +97,10 @@ public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
         }
     }
 
-    private boolean nextSize(Slice slice) {
+    private boolean nextSize(Photo slice) {
         for (int i = slice.getWidth(); i < pizza.getWidth() - slice.getXTopLeft() + 1; ++i) {
             for (int j = slice.getHeight(); j < pizza.getHeight() - slice.getYTopLeft() + 1; ++j) {
-                Slice newSlice = Slice
+                Photo newSlice = Photo
                     .builder()
                     .width(i)
                     .height(j)
@@ -126,6 +118,6 @@ public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
         }
         return false;
     }
-}
+}*/
 
 

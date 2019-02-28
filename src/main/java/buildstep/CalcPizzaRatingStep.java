@@ -1,31 +1,24 @@
 package buildstep;
 
-import builder.PizzaBuilder;
-import lombok.Data;
-import model.Pizza;
-import model.Slice;
-
-import java.util.Map;
-import java.util.TreeSet;
-
+/*
 @Data
-public class CalcPizzaRatingStep implements BuildStep {
+public class CalcPizzaRatingStep  {
     private Pizza pizza;
     private Map<String, Integer> calculatedStates;
-    private TreeSet<Slice> placedSlices;
-    private Slice nextSlice;
-    private PizzaBuilder pizzaBuilder;
+    private TreeSet<Photo> placedSlices;
+    private Photo nextSlice;
+    private slideBuilder pizzaBuilder;
     private int currentRateBefore;
     private int currentRateAfter;
 
     public CalcPizzaRatingStep(
-        PizzaBuilder pizzaBuilder,
-        Slice nextBuilding,
+        slideBuilder pizzaBuilder,
+        Photo nextBuilding,
         TreeSet placedBuildings,
         int currentRate) {
         this.pizzaBuilder = pizzaBuilder;
         this.pizza = pizzaBuilder.getPizza();
-        this.calculatedStates = PizzaBuilder.calculatedStates;
+        this.calculatedStates = slideBuilder.calculatedStates;
         this.placedSlices = placedBuildings;
         this.nextSlice = nextBuilding;
         this.currentRateBefore = currentRate;
@@ -51,9 +44,9 @@ public class CalcPizzaRatingStep implements BuildStep {
     }
 
     private void updateMaxState() {
-        TreeSet<Slice> maxState = new TreeSet<>();
+        TreeSet<Photo> maxState = new TreeSet<>();
         placedSlices.forEach(building -> {
-            maxState.add(Slice.builder()
+            maxState.add(Photo.builder()
                 .width(building.getWidth())
                 .height(building.getHeight())
                 .xTopLeft(building.getXTopLeft())
@@ -78,3 +71,4 @@ public class CalcPizzaRatingStep implements BuildStep {
         this.calculatedStates.put(state, rate);
     }
 }
+*/

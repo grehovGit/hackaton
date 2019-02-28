@@ -1,7 +1,6 @@
 package io;
 
-import model.Pizza;
-import model.Slice;
+import model.Photo;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -11,32 +10,22 @@ import java.util.stream.Collectors;
 
 public class Parser {
 
-    public static Pizza getMainEntity(String[] mainEntityPlan) {
-        Pizza pizza = new Pizza(
-            Integer.parseInt(mainEntityPlan[Pizza.WIDTH_INDEX]),
-            Integer.parseInt(mainEntityPlan[Pizza.HEIGHT_INDEX]),
-            new int[Integer.parseInt(mainEntityPlan[Pizza.WIDTH_INDEX])][Integer.parseInt(mainEntityPlan[Pizza.HEIGHT_INDEX])]);
-        System.out.println(pizza);
-        return pizza;
-    }
+    public static List<Photo> getMainEntity(LinkedList<String> mainEntityPlan) {
+        String photos = mainEntityPlan.poll();
+        int i = 0;
+        List<Photo> photoss = new LinkedList<>();
 
-    public static Pizza fillPizzaCells(LinkedList<String> project, Pizza pizza) {
-        int j = 0;
-        for (String row : project) {
-            int i = 0;
-            for (int val : Arrays.stream(row.split("")).mapToInt(s -> s.equals("T") ? 1 : 2).toArray()) {
-                pizza.getCells()[i++][j] = val;
-            }
-            j++;
+        for (String row : mainEntityPlan) {
+            String [] fields = row.split(" ");
+            Set<String> tags = Arrays.stream(fields).skip(2).collect(Collectors.toSet());
+            Photo photo = new Photo(i++, fields[0] == "H" ? 1 : 2, Integer.parseInt(fields[1]), tags);
+            photoss.add(photo);
         }
-
-        System.out.println(pizza);
-
-        return pizza;
+        return photoss;
     }
 
 
-    public static List<String> exportResult(Set<Slice> maxState) {
+/*    public static List<String> exportResult(Set<Photo> maxState) {
         LinkedList<String> result = maxState.stream()
             .map(slice ->
                 "" + slice.getYTopLeft()
@@ -49,5 +38,5 @@ public class Parser {
             .collect(Collectors.toCollection(() -> new LinkedList<>()));
         result.push(String.valueOf(maxState.size()));
         return result;
-    }
+    }*/
 }
