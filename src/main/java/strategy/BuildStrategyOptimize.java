@@ -4,7 +4,7 @@ package strategy;
 @Data
 @AllArgsConstructor
 public class BuildStrategyOptimize implements BuildStrategy {
-    private slideBuilder pizzaBuilder;
+    private SlideBuilder pizzaBuilder;
 
     @Override
     public void build() {

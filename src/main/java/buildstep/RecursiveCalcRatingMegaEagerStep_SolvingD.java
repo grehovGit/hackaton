@@ -1,22 +1,32 @@
 package buildstep;
 
-/*public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
+import builder.MemoryWarningSystem;
+import builder.SlideBuilder;
+import model.Photo;
+import model.PhotoPair;
+import model.Slide;
+
+import java.util.*;
+
+public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
     static {
         MemoryWarningSystem.setPercentageUsageThreshold(0.9); ;
     }
 
     MemoryWarningSystem mws = new MemoryWarningSystem();
 
-    slideBuilder pizzaBuilder;
-    private Pizza pizza;
+    SlideBuilder slideBuilder;
     private Map<String, Integer> calculatedStates;
-    private TreeSet<Photo> placedSlices = new TreeSet<>();
+    private List<Photo> photos = new ArrayList<>();
+    private TreeSet<Slide> slides = new TreeSet<>();
     private int startSliceNumber = 3;
 
-    public RecursiveCalcRatingMegaEagerStep_SolvingD(slideBuilder pizzaBuilder) {
-        this.pizza = pizzaBuilder.getPizza();
-        this.calculatedStates = slideBuilder.calculatedStates;
-        this.pizzaBuilder = pizzaBuilder;
+    private TreeSet<PhotoPair> pairs = new TreeSet<>();
+
+    public RecursiveCalcRatingMegaEagerStep_SolvingD(SlideBuilder pizzaBuilder) {
+        this.calculatedStates = SlideBuilder.calculatedStates;
+        this.slideBuilder = pizzaBuilder;
+        this.slides = pizzaBuilder.getSlides();
 
         mws.addListener(new MemoryWarningSystem.Listener() {
             public void memoryUsageLow(long usedMemory, long maxMemory) {
@@ -28,96 +38,73 @@ package buildstep;
 
     @Override
     public void makeStep() {
-        rate(this.placedSlices, 0);
+        rate(photos);
     }
 
-    private void rate(TreeSet<Photo> slices, int currentRate) {
-        Photo slice = new Photo(1, 1, 0, 0, startSliceNumber++);
-        slices.add(slice);
+    private void rate(List<Photo> photos) {
+        List<Slide> slides = transformToSlide(photos);
 
-        if (startSliceNumber == 13) {
-            System.out.println(startSliceNumber);
-        }
+        for (int i = 0; i < slides.size(); ++i) {
+            for (int j = 0; j < slides.size(); ++j) {
 
-        boolean foundSize = false;
+                Slide sl1 = slides.get(i);
+                Slide sl2 = slides.get(j);
 
-        while(inPizza(slice)) {
-            if(foundSize = nextSize(slice)) {
-                CalcPizzaRatingStep calcBuildingRatingStep = new CalcPizzaRatingStep(
-                    pizzaBuilder,
-                    slice,
-                    placedSlices,
-                    currentRate);
-                calcBuildingRatingStep.makeStep();
-                int newRate = calcBuildingRatingStep.getCurrentRateAfter();
+                PhotoPair pair = new PhotoPair(i, j, PhotoPair.rate(sl1, sl2));
+                Set a = new HashSet();
 
-                if (newRate >= currentRate) {
-                    pizza.placeSlice(slice);
-//                    System.out.println(pizza);
-
-                    rate(slices, newRate);
-
-                    pizza.removeSlice(slice);
-//                    System.out.println(pizza);
+                if (pairs.contains(pair)) {
+//                    PhotoPair gotPair = pairs.g
                 }
+
+
+
+                pairs.add()
             }
-
-            if ((foundSize && pizza.canPlace(slice)) || MemoryWarningSystem.timeToStop)
-                break;
-
-            slice.resetSize();
-            moveSlice(slice);
         }
-        slices.remove(slice);
-    }
 
-    private boolean inPizza(Photo slice){
-        return slice.getXTopLeft() + slice.getWidth() <= this.pizza.getWidth() &&
-            slice.getYTopLeft() + slice.getHeight() <= this.pizza.getHeight();
-    }
+    };
 
-    private boolean isInEndOfRow(Photo slice){
-        return slice.getXTopLeft() + slice.getWidth() == this.pizza.getWidth();
-    }
+    private List<Slide> transformToSlide(List<Photo> photos) {
+        List<Slide> slides = new ArrayList<>(1000000);
+        Collections.sort(photos, new Comparator<Photo>() {
+            @Override
+            public int compare(Photo o1, Photo o2) {
+                return o1.getType() - o2.getType();
+            }
+        });
 
-    private void moveToNextRow(Photo slice) {
-        slice.setXTopLeft(0);
-        slice.setYTopLeft(slice.getYTopLeft() + 1);
-    }
+        for (int i = 0; i < photos.size(); ++i) {
+            Photo photo = photos.get(i);
 
-    private void moveNext(Photo slice) {
-        slice.setXTopLeft(slice.getXTopLeft() + 1);
-    }
+            if (photo.getType() == 1) {
+                Set<Photo> phots = new TreeSet<>();
+                phots.add(photo);
 
-    private void moveSlice(Photo slice) {
-        if (isInEndOfRow(slice)) {
-            moveToNextRow(slice);
-        } else {
-            moveNext(slice);
-        }
-    }
+                Set<String> tags = new HashSet<>();
+                tags.addAll(photo.getTags());
+                slides.add(new Slide(phots, 1, tags));
+            } else if (photo.getType() == 2) {
+                Set<Photo> phots = new TreeSet<>();
+                phots.add(photo);
 
-    private boolean nextSize(Photo slice) {
-        for (int i = slice.getWidth(); i < pizza.getWidth() - slice.getXTopLeft() + 1; ++i) {
-            for (int j = slice.getHeight(); j < pizza.getHeight() - slice.getYTopLeft() + 1; ++j) {
-                Photo newSlice = Photo
-                    .builder()
-                    .width(i)
-                    .height(j)
-                    .xTopLeft(slice.getXTopLeft())
-                    .yTopLeft(slice.getYTopLeft())
-                    .build();
-                if (!pizza.canPlace(newSlice)) return false;
-                if (!newSlice.isValidCapacity(pizzaBuilder.getMaxCellsSlice())) return false;
-                if (newSlice.enoughIngrdients(pizza, pizzaBuilder.getMinIngredientNmber())) {
-                    slice.setWidth(newSlice.getWidth());
-                    slice.setHeight(newSlice.getHeight());
-                    return true;
+                Set<String> tags = new HashSet<>();
+                tags.addAll(photo.getTags());
+
+                i++;
+                if (i < photos.size()) {
+                    Photo nextPhoto = photos.get(i);
+                    phots.add(nextPhoto);
+                    tags.addAll(nextPhoto.getTags());
+                    slides.add(new Slide(phots, 1, new HashSet<String>()));
                 }
             }
         }
-        return false;
+        return slides;
     }
-}*/
+
+
+
+}
 
 

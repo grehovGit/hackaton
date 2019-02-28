@@ -7,18 +7,18 @@ public class CalcPizzaRatingStep  {
     private Map<String, Integer> calculatedStates;
     private TreeSet<Photo> placedSlices;
     private Photo nextSlice;
-    private slideBuilder pizzaBuilder;
+    private SlideBuilder slideBuilder;
     private int currentRateBefore;
     private int currentRateAfter;
 
     public CalcPizzaRatingStep(
-        slideBuilder pizzaBuilder,
+        SlideBuilder slideBuilder,
         Photo nextBuilding,
         TreeSet placedBuildings,
         int currentRate) {
-        this.pizzaBuilder = pizzaBuilder;
-        this.pizza = pizzaBuilder.getPizza();
-        this.calculatedStates = slideBuilder.calculatedStates;
+        this.slideBuilder = slideBuilder;
+        this.pizza = slideBuilder.getPizza();
+        this.calculatedStates = SlideBuilder.calculatedStates;
         this.placedSlices = placedBuildings;
         this.nextSlice = nextBuilding;
         this.currentRateBefore = currentRate;
@@ -35,9 +35,9 @@ public class CalcPizzaRatingStep  {
 
         remeberState(currentState, rate);
 
-        if (rate > this.pizzaBuilder.getMaxRate()) {
-            this.pizzaBuilder.setMaxRate(rate);
-            this.pizzaBuilder.setMaxKey(currentState);
+        if (rate > this.slideBuilder.getMaxRate()) {
+            this.slideBuilder.setMaxRate(rate);
+            this.slideBuilder.setMaxKey(currentState);
             this.updateMaxState();
         }
         this.currentRateAfter = rate;
@@ -53,7 +53,7 @@ public class CalcPizzaRatingStep  {
                 .yTopLeft(building.getYTopLeft())
                 .number(building.getNumber())
                 .build());});
-        this.pizzaBuilder.setMaxState(maxState);
+        this.slideBuilder.setMaxState(maxState);
     }
 
     private int calculateNextSliceRate() {

@@ -5,11 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class Photo {
+public class Photo implements Comparable<Photo> {
     public static final int TYPE_INDEX = 0;
     public static final int TAGS_NUMBER_INDEX = 1;
     public static final int TAGS_INDEX = 2;
@@ -17,7 +18,7 @@ public class Photo {
     int idex;
     int type; //1 = H, 2 = V
     int tagsNumber;
-    Set<String> tags;
+    TreeSet<String> tags;
 
     @Override
     public boolean equals(Object o) {
@@ -35,5 +36,10 @@ public class Photo {
         int result = super.hashCode();
         result = 31 * result + idex;
         return result;
+    }
+
+    @Override
+    public int compareTo(Photo o) {
+        return this.getTags().hashCode();
     }
 }

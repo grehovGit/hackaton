@@ -1,12 +1,5 @@
 package buildstep;
 
-import builder.MemoryWarningSystem;
-import builder.slideBuilder;
-import model.Photo;
-
-import java.util.Map;
-import java.util.TreeSet;
-
 /*
 public class CyclicCalcRatingMegaEagerStep_SolvingD implements BuildStep {
     static {
@@ -15,16 +8,16 @@ public class CyclicCalcRatingMegaEagerStep_SolvingD implements BuildStep {
 
     MemoryWarningSystem mws = new MemoryWarningSystem();
 
-    slideBuilder pizzaBuilder;
+    SlideBuilder slideBuilder;
     private Pizza pizza;
     private Map<String, Integer> calculatedStates;
     private TreeSet<Photo> placedSlices = new TreeSet<>();
     private int startSliceNumber = 3;
 
-    public CyclicCalcRatingMegaEagerStep_SolvingD(slideBuilder pizzaBuilder) {
-        this.pizza = pizzaBuilder.getPizza();
-        this.calculatedStates = slideBuilder.calculatedStates;
-        this.pizzaBuilder = pizzaBuilder;
+    public CyclicCalcRatingMegaEagerStep_SolvingD(SlideBuilder slideBuilder) {
+        this.pizza = slideBuilder.getPizza();
+        this.calculatedStates = SlideBuilder.calculatedStates;
+        this.slideBuilder = slideBuilder;
 
         mws.addListener(new MemoryWarningSystem.Listener() {
             public void memoryUsageLow(long usedMemory, long maxMemory) {
@@ -49,12 +42,12 @@ public class CyclicCalcRatingMegaEagerStep_SolvingD implements BuildStep {
                 calculatedStates.clear();
                 MemoryWarningSystem.timeToStop = false;
                 System.out.println(slice);
-                System.out.println("Rate: " + pizzaBuilder.getMaxRate());
+                System.out.println("Rate: " + slideBuilder.getMaxRate());
             }
 
             if(nextSize(slice)) {
                 CalcPizzaRatingStep calcBuildingRatingStep = new CalcPizzaRatingStep(
-                    pizzaBuilder,
+                    slideBuilder,
                     slice,
                     placedSlices,
                     currentRate);
@@ -104,8 +97,8 @@ public class CyclicCalcRatingMegaEagerStep_SolvingD implements BuildStep {
     }
 
     private boolean nextSize(Photo slice) {
-        for (int i = slice.getWidth(); i < pizza.getWidth() - slice.getXTopLeft() + 1 && i <= pizzaBuilder.getMaxCellsSlice(); ++i) {
-            for (int j = slice.getHeight(); j < pizza.getHeight() - slice.getYTopLeft() + 1 && j <= pizzaBuilder.getMaxCellsSlice() / i; ++j) {
+        for (int i = slice.getWidth(); i < pizza.getWidth() - slice.getXTopLeft() + 1 && i <= slideBuilder.getMaxCellsSlice(); ++i) {
+            for (int j = slice.getHeight(); j < pizza.getHeight() - slice.getYTopLeft() + 1 && j <= slideBuilder.getMaxCellsSlice() / i; ++j) {
                 Photo newSlice = Photo
                     .builder()
                     .width(i)
@@ -114,8 +107,8 @@ public class CyclicCalcRatingMegaEagerStep_SolvingD implements BuildStep {
                     .yTopLeft(slice.getYTopLeft())
                     .build();
                 if (!pizza.canPlace(newSlice)) return false;
-                if (!newSlice.isValidCapacity(pizzaBuilder.getMaxCellsSlice())) return false;
-                if (newSlice.enoughIngrdients(pizza, pizzaBuilder.getMinIngredientNmber())) {
+                if (!newSlice.isValidCapacity(slideBuilder.getMaxCellsSlice())) return false;
+                if (newSlice.enoughIngrdients(pizza, slideBuilder.getMinIngredientNmber())) {
                     slice.setWidth(newSlice.getWidth());
                     slice.setHeight(newSlice.getHeight());
                     return true;

@@ -2,10 +2,7 @@ package io;
 
 import model.Photo;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Parser {
@@ -17,7 +14,7 @@ public class Parser {
 
         for (String row : mainEntityPlan) {
             String [] fields = row.split(" ");
-            Set<String> tags = Arrays.stream(fields).skip(2).collect(Collectors.toSet());
+            TreeSet<String> tags = Arrays.stream(fields).skip(2).collect(Collectors.toCollection(()-> new TreeSet<>()));
             Photo photo = new Photo(i++, fields[0] == "H" ? 1 : 2, Integer.parseInt(fields[1]), tags);
             photoss.add(photo);
         }
