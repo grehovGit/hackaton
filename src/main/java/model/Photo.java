@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,7 +19,7 @@ public class Photo implements Comparable<Photo> {
     int idex;
     int type; //1 = H, 2 = V
     int tagsNumber;
-    TreeSet<String> tags;
+    HashSet<String> tags;
 
     @Override
     public boolean equals(Object o) {

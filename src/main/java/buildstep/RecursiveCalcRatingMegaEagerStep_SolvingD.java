@@ -7,8 +7,9 @@ import model.PhotoPair;
 import model.Slide;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
+public class RecursiveCalcRatingMegaEagerStep_SolvingD {
     static {
         MemoryWarningSystem.setPercentageUsageThreshold(0.9); ;
     }
@@ -18,7 +19,6 @@ public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
     SlideBuilder slideBuilder;
     private Map<String, Integer> calculatedStates;
     private List<Photo> photos = new ArrayList<>();
-    private TreeSet<Slide> slides = new TreeSet<>();
     private int startSliceNumber = 3;
 
     private TreeSet<PhotoPair> pairs = new TreeSet<>();
@@ -26,7 +26,7 @@ public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
     public RecursiveCalcRatingMegaEagerStep_SolvingD(SlideBuilder pizzaBuilder) {
         this.calculatedStates = SlideBuilder.calculatedStates;
         this.slideBuilder = pizzaBuilder;
-        this.slides = pizzaBuilder.getSlides();
+        this.photos = pizzaBuilder.getPhotos();
 
         mws.addListener(new MemoryWarningSystem.Listener() {
             public void memoryUsageLow(long usedMemory, long maxMemory) {
@@ -36,75 +36,43 @@ public class RecursiveCalcRatingMegaEagerStep_SolvingD implements BuildStep {
         });
     }
 
-    @Override
-    public void makeStep() {
-        rate(photos);
+    public List<Slide> makeStep() {
+        return rate(photos);
     }
 
-    private void rate(List<Photo> photos) {
-        List<Slide> slides = transformToSlide(photos);
+    private List<Slide> rate(List<Photo> photos) {
+        Set<Slide> slides = transformToSlide(photos);
+        List<Slide> result = new LinkedList<>();
+        int monitor = 0;
+        Slide root = slides.stream().findFirst().get();
+        slides.remove(root);
+        result.add(root);
 
-        for (int i = 0; i < slides.size(); ++i) {
-            for (int j = 0; j < slides.size(); ++j) {
-
-                Slide sl1 = slides.get(i);
-                Slide sl2 = slides.get(j);
-
-                PhotoPair pair = new PhotoPair(i, j, PhotoPair.rate(sl1, sl2));
-                Set a = new HashSet();
-
-                if (pairs.contains(pair)) {
-//                    PhotoPair gotPair = pairs.g
-                }
-
-
-
-                pairs.add()
-            }
+        while(slides.size() > 0) {
+            monitor++;
+            final Slide tale = root;
+            Slide maxTale = slides.stream()
+                .max((o1, o2) -> PhotoPair.rate(tale, o1)).get();
+            slides.remove(maxTale);
+            result.add(maxTale);
+            root = maxTale;
         }
-
+        return result;
     };
 
-    private List<Slide> transformToSlide(List<Photo> photos) {
-        List<Slide> slides = new ArrayList<>(1000000);
-        Collections.sort(photos, new Comparator<Photo>() {
-            @Override
-            public int compare(Photo o1, Photo o2) {
-                return o1.getType() - o2.getType();
-            }
-        });
-
-        for (int i = 0; i < photos.size(); ++i) {
-            Photo photo = photos.get(i);
-
-            if (photo.getType() == 1) {
+    private Set<Slide> transformToSlide(List<Photo> photos) {
+        return photos
+            .stream()
+            .filter(photo -> photo.getType() == 1)
+            .map(photo -> {
                 Set<Photo> phots = new TreeSet<>();
                 phots.add(photo);
 
                 Set<String> tags = new HashSet<>();
                 tags.addAll(photo.getTags());
-                slides.add(new Slide(phots, 1, tags));
-            } else if (photo.getType() == 2) {
-                Set<Photo> phots = new TreeSet<>();
-                phots.add(photo);
-
-                Set<String> tags = new HashSet<>();
-                tags.addAll(photo.getTags());
-
-                i++;
-                if (i < photos.size()) {
-                    Photo nextPhoto = photos.get(i);
-                    phots.add(nextPhoto);
-                    tags.addAll(nextPhoto.getTags());
-                    slides.add(new Slide(phots, 1, new HashSet<String>()));
-                }
-            }
-        }
-        return slides;
+                return new Slide(phots, 1, tags, null);})
+            .collect(Collectors.toSet());
     }
-
-
-
 }
 
 

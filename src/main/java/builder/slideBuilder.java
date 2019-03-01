@@ -1,11 +1,13 @@
 package builder;
 
 import buildstep.BuildStep;
+import buildstep.RecursiveCalcRatingMegaEagerStep_SolvingD;
 import buildstep.VisualizeResultStep;
 import io.InputOutput;
 import io.Parser;
 import lombok.Data;
 import model.Photo;
+import model.PhotoPair;
 import model.Slide;
 
 import java.util.*;
@@ -26,13 +28,14 @@ public class SlideBuilder {
         LinkedList<String> slidePlan = InputOutput.load("C://testSlides/1.txt");
         SlideBuilder slideBuilder = new SlideBuilder(slidePlan);
 
+        RecursiveCalcRatingMegaEagerStep_SolvingD aaa = new RecursiveCalcRatingMegaEagerStep_SolvingD(slideBuilder);
+        List<Slide> slides = aaa.makeStep();
 
-//        BuildStrategy solvingStrategy = SlideBuilder.getStratgey();
-//        solvingStrategy.build();
+
         BuildStep visualization = new VisualizeResultStep();
         visualization.makeStep();
 
-//        InputOutput.export(Parser.exportResult(SlideBuilder.getMaxState()), "C://testSlides/2.txt");
+        InputOutput.export(Parser.exportResult(slides), "C://testSlides/2.txt");
 
         System.out.println("Max State:" + slideBuilder.getMaxState());
         System.out.println("Max Rate:" + slideBuilder.getMaxRate());

@@ -17,12 +17,13 @@ public class Slide {
     public static final int TAGS_INDEX = 2;
 
     Set<Photo> photos;
-    int rate;
+    int rate = 0;
     Set<String> tags;
+    PhotoPair owner;
 
     int rate(Photo photo1, Photo photo2) {
-        Set<String> tags1 = new TreeSet<>((photo1.getTags()));
-        Set<String> tags2 = new TreeSet<>((photo2.getTags()));
+        Set<String> tags1 = new HashSet<>(photo1.getTags());
+        Set<String> tags2 = new HashSet<>(photo2.getTags());
 
         int startSize = tags1.size();
         tags1.removeAll(photo2.getTags());
@@ -33,6 +34,5 @@ public class Slide {
 
         int min =  Math.min(diff1, diff2);
         return Math.min(min, shareSize);
-
     }
 }
