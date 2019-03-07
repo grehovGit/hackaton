@@ -16,10 +16,12 @@ public class Slide {
     public static final int TAGS_NUMBER_INDEX = 1;
     public static final int TAGS_INDEX = 2;
 
+    int index;
+
     Set<Photo> photos;
     int rate = 0;
     Set<String> tags;
-    PhotoPair owner;
+    Slide v1, v2;
 
     int rate(Photo photo1, Photo photo2) {
         Set<String> tags1 = new HashSet<>(photo1.getTags());
@@ -34,5 +36,38 @@ public class Slide {
 
         int min =  Math.min(diff1, diff2);
         return Math.min(min, shareSize);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Slide slide = (Slide) o;
+
+        return index == slide.index;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + index;
+        return result;
+    }
+
+    void setMaxRate(int rate) {
+        if (rate > this.getRate())
+            this.setRate(rate);
+    }
+
+    @Override
+    public String toString() {
+        return "Slide{" +
+            "index=" + index +
+            ", photos=" + photos +
+            ", rate=" + rate +
+            ", tags=" + tags +
+            '}';
     }
 }

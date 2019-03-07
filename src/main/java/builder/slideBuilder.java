@@ -9,7 +9,10 @@ import lombok.Data;
 import model.Photo;
 import model.PhotoPair;
 import model.Slide;
+import org.apache.http.client.utils.URIBuilder;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Data

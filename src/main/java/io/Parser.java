@@ -27,7 +27,15 @@ public class Parser {
     public static List<String> exportResult(List<Slide> maxState) {
         LinkedList<String> result = maxState.stream()
             .map(slide ->
-                "" + slide.getPhotos().stream().findFirst().get().getIdex())
+                slide
+                    .getPhotos()
+                    .stream()
+                    .limit(2)
+                    .map(
+                        photo -> String.valueOf(
+                            photo
+                                .getIdex()))
+                    .collect(Collectors.joining(" ")))
             .collect(Collectors.toCollection(() -> new LinkedList<>()));
         result.push(String.valueOf(maxState.size()));
         return result;
